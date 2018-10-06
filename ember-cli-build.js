@@ -1,6 +1,8 @@
 'use strict';
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
+const Funnel = require('broccoli-funnel');
+const MergeTrees = require('broccoli-merge-trees');
 
 module.exports = function(defaults) {
   let app = new EmberApp(defaults, {
@@ -20,5 +22,13 @@ module.exports = function(defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
 
-  return app.toTree();
+  app.import('node_modules/normalize.css/normalize.css');
+  app.import('node_modules/@typopro/web-roboto/TypoPRO-Roboto.css');
+
+  const roboto = new Funnel('node_modules/@typopro/web-roboto/', {
+    destDir: 'assets',
+    include: ['*.eot', '*.ttf', '*.woff'],
+  });
+
+  return new MergeTrees([app.toTree(), roboto]);
 };
